@@ -21,7 +21,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := engine.RunTLS(cfg.Server.Addr, cfg.Server.CrtFile, cfg.Server.KeyFile); err != nil {
-		panic(err)
+	if cfg.Server.HTTPS {
+		if err := engine.RunTLS(cfg.Server.Addr, cfg.Server.CrtFile, cfg.Server.KeyFile); err != nil {
+			panic(err)
+		}
+	} else {
+		if err := engine.Run(cfg.Server.Addr); err != nil {
+			panic(err)
+		}
 	}
 }

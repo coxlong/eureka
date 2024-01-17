@@ -10,6 +10,7 @@ type ConversationsService interface {
 	UpdateConversation(uid string, meta *model.ConversationMeta, messages []model.Message) error
 	GetConversation(cid string, uid string) (*model.ConversationMeta, []model.Message, error)
 	GetConversations(uid string) ([]model.ConversationMeta, error)
+	UpdateTitle(uid, cid, title string) error
 }
 
 func NewConversationService(r repository.ConversationsRepo) ConversationsService {
@@ -50,4 +51,11 @@ func (s *DefaultConversationService) GetConversation(cid string, uid string) (*m
 
 func (s *DefaultConversationService) GetConversations(uid string) ([]model.ConversationMeta, error) {
 	return s.repo.GetConversations(uid)
+}
+
+func (s *DefaultConversationService) UpdateTitle(uid, cid, title string) error {
+	return s.repo.UpdateConversation(uid, &model.ConversationMeta{
+		ID:    cid,
+		Title: title,
+	})
 }

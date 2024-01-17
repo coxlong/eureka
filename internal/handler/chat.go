@@ -29,6 +29,7 @@ type ChatCompletionRequest struct {
 	*openai.ChatCompletionRequest
 	ID       string          `json:"id"`
 	Messages []model.Message `json:"messages"`
+	Save     bool            `json:"save"`
 }
 
 func (req *ChatCompletionRequest) UnmarshalJSON(data []byte) error {
@@ -126,8 +127,10 @@ func (h *DefaultChatHandler) Completions(c *gin.Context) {
 		w.Write([]byte("\n\n"))
 		return true
 	})
-	if err := h.save(c, &req, answer, answerID); err != nil {
-		log.Error("save failed", zap.Error(err))
+	if req.Save {
+		if err := h.save(c, &req, answer, answerID); err != nil {
+			log.Error("save failed", zap.Error(err))
+		}
 	}
 }
 

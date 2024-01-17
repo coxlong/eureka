@@ -23,6 +23,7 @@ type Env struct {
 }
 
 type Server struct {
+	HTTPS   bool
 	Addr    string
 	CrtFile string
 	KeyFile string

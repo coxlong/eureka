@@ -54,4 +54,5 @@ func setupAuthRouter(router *gin.RouterGroup, handle handler.AuthHandler) {
 func setupConversationsRouter(router *gin.RouterGroup, handle handler.ConversationsHandler) {
 	router.GET("/:id", handle.GetConversation)
 	router.GET("/", handle.GetConversations)
+	router.PUT("/:id", handle.UpdateTitle)
 }

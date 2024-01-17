@@ -10,6 +10,7 @@ import (
 type ConversationsHandler interface {
 	GetConversation(*gin.Context)
 	GetConversations(*gin.Context)
+	UpdateTitle(*gin.Context)
 }
 
 func NewConversationHandler(service service.ConversationsService) ConversationsHandler {
@@ -45,4 +46,23 @@ func (h *DefaultConversationsHandler) GetConversations(c *gin.Context) {
 		return
 	}
 	c.JSON(200, conversations)
+}
+
+func (h *DefaultConversationsHandler) UpdateTitle(c *gin.Context) {
+	cid := c.Param("id")
+	user := c.Value(constants.UserSessionKey).(model.User)
+	var req struct {
+		Title string `json:"title"`
+	}
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		c.String(400, err.Error())
+		return
+	}
+	err = h.service.UpdateTitle(user.ID, cid, req.Title)
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+	c.String(200, "success")
 }

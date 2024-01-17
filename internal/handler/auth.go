@@ -83,6 +83,7 @@ func (a *DefaultAuthHandler) Callback(c *gin.Context) {
 		c.String(401, "invalid request")
 		return
 	}
+	stateCache.Remove(state)
 
 	user, err := a.getGithubUserInfo(c, code)
 	if err != nil {
