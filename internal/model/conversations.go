@@ -10,7 +10,18 @@ type Message struct {
 	Parent    string    `json:"parent"`
 	Role      string    `json:"role"`
 	Content   string    `json:"content"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time `json:"-"`
+}
+
+func (m Message) MarshalJSON() ([]byte, error) {
+	type Alias Message
+	return json.Marshal(struct {
+		Alias
+		CreatedAt int64 `json:"created_at"`
+	}{
+		Alias:     (Alias)(m),
+		CreatedAt: m.CreatedAt.UnixMilli(),
+	})
 }
 
 type ConversationMeta struct {

@@ -38,6 +38,7 @@ func (h *DefaultConversationsHandler) GetConversation(c *gin.Context) {
 		"messages": messagesMap,
 	})
 }
+
 func (h *DefaultConversationsHandler) GetConversations(c *gin.Context) {
 	user := c.Value(constants.UserSessionKey).(model.User)
 	conversations, err := h.service.GetConversations(user.ID)

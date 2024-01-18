@@ -27,9 +27,10 @@ func NewChatHandler(service service.ConversationsService, baseURL string) ChatHa
 
 type ChatCompletionRequest struct {
 	*openai.ChatCompletionRequest
-	ID       string          `json:"id"`
-	Messages []model.Message `json:"messages"`
-	Save     bool            `json:"save"`
+	ID            string          `json:"id"`
+	CurrentNodeID string          `json:"current_node_id"`
+	Messages      []model.Message `json:"messages"`
+	Save          bool            `json:"save"`
 }
 
 func (req *ChatCompletionRequest) UnmarshalJSON(data []byte) error {
@@ -162,10 +163,9 @@ func (h *DefaultChatHandler) save(c *gin.Context, req *ChatCompletionRequest, an
 			messages = append(messages, item)
 		}
 	}
-	parent := messages[len(messages)-1].ID
 	messages = append(messages, model.Message{
 		ID:      answerID,
-		Parent:  parent,
+		Parent:  req.CurrentNodeID,
 		Role:    "assistant",
 		Content: answer,
 	})
